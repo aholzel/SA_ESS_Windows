@@ -1,0 +1,3 @@
+GUID,Group_Domain,Group_Name
+"CN=Domain Admins,OU=groups,DC=example,DC=local",Example,"Domain Admins"
+"CN=Administrators,OU=groups,DC=example,DC=nl",Example,Administrators

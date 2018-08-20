@@ -1,0 +1,59 @@
+userAccountControl,hex,UAC_explanation
+1,0x1,The logon script will be run
+2,0x2,Account is disabled
+4,0x4,Undeclared value
+8,0x8,Home folder is required
+16,0x10,Account is locked out
+17,0x11,Account is locked out|The logon script will be run
+20,0x14,Account is locked out|Undeclared value
+21,0x15,Account is locked out|Undeclared value|The logon script will be run
+32,0x20,Password not required
+64,0x40,User cannot change the password
+128,0x80,User can send an encrypted password
+256,0x100,Account for users whose primary account is in another domain
+512,0x200,Normal Account
+514,0x202,Normal Account|Account is disabled
+528,0x210,Normal Account|Account is locked out
+529,0x211,Normal Account|Account is locked out|The logon script will be run
+532,0x214,Normal Account|Account is locked out|Undeclared value
+533,0x215,Normal Account|Account is locked out|Undeclared value|The logon script will be run
+544,0x220,Normal Account|Password not required
+546,0x222,Normal Account|Password not required|Account is disabled
+2048,0x800,Interdomain Trust Account
+2080,0x820,Interdomain Trust Account|Password not required
+4096,0x1000,Workstation Trust Account
+4098,0x1002,Workstation Trust Account|Account is disabled
+4112,0x1010,Workstation Trust Account|Account is locked out
+4128,0x1020,Workstation Trust Account|Password not required
+8192,0x2000,Server Trust Account
+8208,0x2010,Server Trust Account|Account is locked out
+8720,0x2210,Server Trust Account|Normal Account|Account is locked out
+8721,0x2211,Server Trust Account|Normal Account|Account is locked out|The logon script will be run
+10768,0x2A10,Server Trust Account|Interdomain Trust Account|Normal Account|Account is locked out
+16384,0x4000,Undeclared value
+16912,0x4210,Undeclared value|Normal Account|Account is locked out
+16913,0x4211,Undeclared value|Normal Account|Account is locked out|The logon script will be run
+32768,0x8000,Undeclared value
+32784,0x8010,Undeclared value|Account is locked out
+33296,0x8210,Undeclared value|Normal Account|Account is locked out
+65536,0x10000,Password does not expire
+66048,0x10200,Normal Account|Password does not expire
+66050,0x10202,Normal Account|Account is disabled|Password does not expire
+66080,0x10220,Normal Account|Password not required|Password does not expire
+69632,0x11000,Workstation Trust Account|Password does not expire
+131072,0x20000,MNS logon account
+262144,0x40000,Account is forced to log on with a smart card
+524288,0x80000,Trusted for Kerberos delegation
+528384,0x81000,Workstation Trust Account|Trusted for Kerberos delegation
+532480,0x82000,Server Trust Account|Trusted for Kerberos delegation
+590336,0x90200,Normal Account|Password does not expire|Trusted for Kerberos delegation
+1048576,0x100000,Security context of the account is not delegated to a service
+2097152,0x200000,Use DES key only
+2166786,0x211002,Workstation Trust Account|Account is disabled|Password does not expire|Use DES key only
+4194304,0x400000,Account does not require Kerberos pre-authentication for logging on
+8388608,0x800000,Account password has expired
+16777216,0x1000000,Account is enabled for delegation
+16781312,0x1001000,Workstation Trust Account|Account is enabled for delegation
+16843264,0x1010200,Normal Account|Password does not expire|Account is enabled for delegation
+67108864,0x4000000,Account is a read-only domain controller
+83890176,0x5001000,Workstation Trust Account|Account is enabled for delegation|Account is a read-only domain controller

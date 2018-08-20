@@ -1,0 +1,204 @@
+<form>
+  <search id="BaseSearch">
+    <query>`winevent_security` EventCode=5136 [ | inputlookup monitored_groups.csv | rename GUID AS DN]
+| eval result = mvindex(Type,2)
+| rex field=result "\w+\s(?&lt;Operation&gt;\w+)"
+| rex field=Message "(?ms)LDAP\sDisplay\sName\:\s+(?&lt;LDAP_Attribute&gt;[^\s]+).*?Value\:\s+(?&lt;LDAP_Value&gt;[^\s]+)"</query>
+    <earliest>$TimeRange.earliest$</earliest>
+    <latest>$TimeRange.latest$</latest>
+  </search>
+  <label>Monitored Groups</label>
+  <fieldset autoRun="true" submitButton="true">
+    <input type="multiselect" token="AffectedUser">
+      <label>Affected User</label>
+      <search base="BaseSearch">
+        <query>| dedup LDAP_Value
+| rex field=LDAP_Value "CN=(?&lt;Affected_User&gt;[^,]+)"
+| eval Affected_User=lower(Affected_User)
+| table Affected_User 
+| sort Affected_User</query>
+      </search>
+      <fieldForLabel>Affected_User</fieldForLabel>
+      <fieldForValue>Affected_User</fieldForValue>
+      <choice value="*">ALL</choice>
+      <default>*</default>
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+      <valuePrefix>LDAP_Value=*</valuePrefix>
+      <valueSuffix>*</valueSuffix>
+      <delimiter> OR </delimiter>
+    </input>
+    <input type="multiselect" token="ExecutingUser">
+      <label>Executing User</label>
+      <search base="BaseSearch">
+        <query>| dedup Account_Name 
+| table Account_Name 
+| sort Account_Name</query>
+      </search>
+      <fieldForLabel>Account_Name</fieldForLabel>
+      <fieldForValue>Account_Name</fieldForValue>
+      <choice value="*">ALL</choice>
+      <default>*</default>
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+      <valuePrefix>Account_Name=</valuePrefix>
+      <delimiter> OR </delimiter>
+    </input>
+    <input type="multiselect" token="Group_Name">
+      <label>Group Name</label>
+      <search base="BaseSearch">
+        <query>| rex field=DN "CN=(?&lt;Group_Name&gt;[^,]+)" 
+| stats count by Group_Name</query>
+      </search>
+      <fieldForLabel>Group_Name</fieldForLabel>
+      <fieldForValue>Group_Name</fieldForValue>
+      <choice value="*">ALL</choice>
+      <default>*</default>
+      <valuePrefix>DN=*</valuePrefix>
+      <valueSuffix>*</valueSuffix>
+      <delimiter> OR </delimiter>
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+    </input>
+    <input type="multiselect" token="Filter_Operation">
+      <label>Filter Operation</label>
+      <search base="BaseSearch">
+        <query>| dedup Operation
+| table Operation
+| sort Operation</query>
+      </search>
+      <fieldForLabel>Operation</fieldForLabel>
+      <fieldForValue>Operation</fieldForValue>
+      <choice value="*">ALL</choice>
+      <default>*</default>
+      <valuePrefix>Operation=</valuePrefix>
+      <delimiter> OR </delimiter>
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+    </input>
+    <input type="time" token="TimeRange" searchWhenChanged="false">
+      <label>Time Range</label>
+      <default>
+        <earliest>-3d@d</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>By Operation</title>
+      <chart>
+        <search base="BaseSearch">
+          <query>| Search $AffectedUser$ $ExecutingUser$ $Group_Name$ $Filter_Operation$
+| stats count by Operation</query>
+        </search>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>By Executing User</title>
+      <chart>
+        <search base="BaseSearch">
+          <query>| Search $AffectedUser$ $ExecutingUser$ $Group_Name$ $Filter_Operation$
+| stats count by Account_Name</query>
+        </search>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>By GroupName</title>
+      <chart>
+        <search base="BaseSearch">
+          <query>| Search $AffectedUser$ $ExecutingUser$ $Group_Name$ $Filter_Operation$
+| rex field=DN "CN=(?&lt;Group_Name&gt;[^,]+)" 
+| stats count by Group_Name</query>
+        </search>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.axisY2.enabled">false</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Details</title>
+      <table>
+        <search base="BaseSearch">
+          <query>| Search $AffectedUser$ $ExecutingUser$ $Group_Name$ $Filter_Operation$
+| table _time Account_Name DN Operation LDAP_Attribute LDAP_Value 
+| sort - _time</query>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">false</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="list.drilldown">full</option>
+        <option name="list.wrap">1</option>
+        <option name="maxLines">5</option>
+        <option name="raw.drilldown">full</option>
+        <option name="table.drilldown">all</option>
+        <option name="table.wrap">1</option>
+        <option name="type">list</option>
+        <option name="drilldown">cell</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+</form>

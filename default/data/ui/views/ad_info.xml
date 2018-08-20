@@ -1,0 +1,89 @@
+<dashboard>
+  <search id="baseSearchPasswords">
+  <query>`admon_index` 
+| stats last(whenCreated) AS whenCreated, last(lastLogon) AS lastLogon, last(pwdLastSet) AS pwdLastSet, last(userAccountControl) AS userAccountControl, last(UAC_explanation) AS UAC_explanation by sAMAccountName   
+| eval lastLogonEpoch=strptime(lastLogon,"%I:%M.%S %p, %a %m/%d/%Y"),
+    pwdLastSetEpoch=strptime(pwdLastSet,"%I:%M.%S %p, %a %m/%d/%Y"),
+    lastLogon=strftime(strptime(lastLogon,"%I:%M.%S %p, %a %m/%d/%Y"), "%F %T"),
+    whenCreated=strftime(strptime(whenCreated,"%I:%M.%S %p, %a %m/%d/%Y"), "%F %T"),
+    pwdLastSet=strftime(strptime(pwdLastSet,"%I:%M.%S %p, %a %m/%d/%Y"), "%F %T"),
+    timeNow=now(),
+    currentYear=strftime(now(), "%Y"),
+    lastLogonDays=round((timeNow-lastLogonEpoch)/86400,1),
+    pwdLastSetDays=round((timeNow-pwdLastSetEpoch)/86400,1),
+    passwordInUseYears=round((timeNow-pwdLastSetEpoch)/31556926,1),
+    passwordInUseYears=if(passwordInUseYears==currentYear,0,passwordInUseYears),
+    machineAccount=if(substr(sAMAccountName,-1)=="$", 1, 0) 
+| sort - pwdLastSetDays + lastLogonDays  
+| fields machineAccount sAMAccountName whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
+  </search>
+    <label>AD info</label>
+  <row>
+    <panel>
+      <table>
+        <title>"user" accounts with old passwords (90+ days ) - last 60 days</title>
+        <search base="baseSearchPasswords">
+          <query>| where pwdLastSetDays&gt;90 AND machineAccount==0
+| table sAMAccountName whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
+          <earliest>-60d@d</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">true</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>"machine" accounts with old passwords (30+ days) - last 60 days</title>
+        <search base="baseSearchPasswords">
+          <query>| where pwdLastSetDays&gt;30 AND machineAccount==1
+| table sAMAccountName whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
+        </search>
+        <option name="wrap">undefined</option>
+        <option name="rowNumbers">undefined</option>
+        <option name="drilldown">row</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>{GROUP} members - last 7 days</title>
+        <search>
+          <query>`admon_index` sAMAccountName={GROUP} | eval members=split(member, "|") | mvexpand members | table members</query>
+          <earliest>-7d@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="wrap">undefined</option>
+        <option name="rowNumbers">undefined</option>
+        <option name="drilldown">row</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Operating Systems in use - last 30 days</title>
+        <search>
+          <query>`admon_index` objectClass=*computer* | dedup dNSHostName | fillnull value="N/A" operatingSystemServicePack | stats latest(_time) AS lastReportTime, values(dNSHostName) AS Hostnames, count by operatingSystem operatingSystemServicePack | eval lastReportTime=strftime(lastReportTime, "%F %T"), Hostnames=if(count&gt;20, "**To many Hostnames to display**", Hostnames)</query>
+          <earliest>-30d@d</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">true</option>
+        <option name="drilldown">cell</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>

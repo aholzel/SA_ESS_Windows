@@ -1,0 +1,2 @@
+hash,hash_type,options,script_file,script_location,system_group
+,,,loginscript.ps1,C:\logonScript\,workstations|servers

@@ -1,0 +1,182 @@
+<form>
+  <label>PowerShell</label>
+  <description>Scripts from the "legit_powershell_scripts.csv" lookup are excluded. To view the content of the lookup check the "view lookup content" checkbox, hit submit and scroll down.</description>
+  <!--
+  <row>
+    <panel>
+      <table id="base64_decoded" depends="$script_host$">
+        <search>
+          <query>index=$indexSelect$ `security_log` EventCode=4688 earliest=$script_earliest$ latest=$script_latest$ host="$script_host$" 
+| eval base64_decoded=base64_encoded
+| base64 field=base64_decoded action=decode mode=replace
+| eval base64_decoded=if(isnull(base64_encoded) OR base64_encoded="", "&lt;&lt;NOTHING TO DECODE&gt;&gt;", base64_decoded)
+| table base64_decoded</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+-->
+  <fieldset submitButton="true" autoRun="true">
+    <input type="time" token="TimeRange">
+      <label>Time Range</label>
+      <default>
+        <earliest>-60m@m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="indexSelect">
+      <label>Enviroment</label>
+      <choice value="wineventlog-wp">Workstations</choice>
+      <choice value="wineventlog">Servers</choice>
+      <default>wineventlog</default>
+      <initialValue>wineventlog</initialValue>
+      <change>
+        <condition label="Servers">
+          <set token="system_group">servers</set>
+        </condition>
+        <condition label="Workstations">
+          <set token="system_group">workstations</set>
+        </condition>
+      </change>
+    </input>
+    <input type="text" token="userText">
+      <label>(src) user</label>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+    <input type="text" token="hostText">
+      <label>host</label>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+    <input type="text" token="maxLengthText">
+      <label>Max Command Length</label>
+      <default>200</default>
+      <initialValue>200</initialValue>
+    </input>
+    <input type="text" token="perc_AN">
+      <label>Max. % of non alphanumeric chars</label>
+      <default>30</default>
+      <initialValue>30</initialValue>
+    </input>
+    <input type="multiselect" token="suspiciousCommandSelect">
+      <label>Suspicious Command</label>
+      <choice value="*">ALL</choice>
+      <choice value="Yes*">Yes (all)</choice>
+      <default>Yes*</default>
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+      <initialValue>Yes*</initialValue>
+      <valuePrefix>suspicious_command="</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <delimiter> OR </delimiter>
+      <fieldForLabel>suspicious_command_desc</fieldForLabel>
+      <fieldForValue>suspicious_command_desc</fieldForValue>
+      <search>
+        <query>| makeresults 
+| `ps_suspicious_command`
+| mvexpand suspicious_command_desc
+| fields - _time suspicious_command
+| sort suspicious_command_desc</query>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+    <input type="checkbox" token="viewLookupContent">
+      <label>View lookup content</label>
+      <choice value="yes">Yes</choice>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>index=$indexSelect$ `security_log` EventCode=4688 host="$hostText$" (src_user="$userText$" OR user="$userText$") process_parameters=* (process_exe="powershell*" OR process_command="powershell*") process_command!=*splunk* NOT [ | inputlookup legit_powershell_scripts.csv | eval system_group=split(system_group, "|") | where system_group="$system_group$" | fields script_file ]
+| eval process_length=len(process_parameters),
+  powershell_options_snipped=if(len(process_parameters)&lt;130, process_parameters, substr(process_parameters,0,130)." ****SNIP**** "),
+  powershell_script=coalesce(script_file, remote_script, ""),
+  earliest=strftime(_time,"%s"), latest=tonumber(strftime(_time, "%s"))+0.001, earliest_min_xd=tonumber(earliest-(86400*7))
+| `ps_suspicious_command($maxLengthText$,$perc_AN$)`
+| search $suspiciousCommandSelect$
+| sort - _time
+| table _time host src_user user process_exe powershell_script powershell_options_snipped suspicious_command earliest earliest_min_xd latest process_parameters perc_non_AN process_length Creator_Process_ID New_Process_ID
+| rename host AS Host, src_user AS "Source User", user AS "Target User", process_exe AS "Process EXE", powershell_script AS "Script file", powershell_options_snipped AS "Powershell options", suspicious_command AS "Suspicious (reason)", perc_non_AN AS "% Non alphanumeric", process_length AS Length</query>
+          <earliest>$TimeRange.earliest$</earliest>
+          <latest>$TimeRange.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <fields>["_time","Host","Source User","Target User","Process EXE","Script file","Powershell options","Suspicious (reason)","% Non alphanumeric","Length"]</fields>
+        <drilldown>
+          <set token="script_earliest">$row.earliest$</set>
+          <set token="script_latest">$row.latest$</set>
+          <set token="script_host">$row.Host$</set>
+          <set token="script">$row.Script file$</set>
+          <set token="script_user">$row.Target User$</set>
+          <set token="script_process_creator_id">$row.Creator_Process_ID$</set>
+          <set token="script_process_id">$row.New_Process_ID$</set>
+          <set token="script_earliest_min_xd">$row.earliest_min_xd$</set>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Parent Process &amp; Full Process Command Line</title>
+      <table id="full_process_command_line" depends="$script_host$">
+        <search>
+          <query>index=$indexSelect$ `security_log` EventCode=4688 process_command!=*splunk* earliest=$script_earliest$ latest=$script_latest$ host="$script_host$" user="$script_user$" New_Process_ID="$script_process_id$"
+| append [| search index=$indexSelect$ `security_log` EventCode=4688 host="$script_host$" New_Process_ID="$script_process_creator_id$" earliest=$script_earliest_min_xd$ latest=$script_latest$ | eval isParent="yes"]
+| eval parentProcess=if(isParent=="yes",New_Process_Name, null())
+| stats values(parentProcess*) AS parentProcess* by Process_Command_Line New_Process_ID
+| reverse
+| autoregress parentProcess
+| eval parentProcess=coalesce(parentProcess,parentProcess_p1)
+| where New_Process_ID=="$script_process_id$"
+| table parentProcess Process_Command_Line</query>
+          <earliest>$TimeRange.earliest$</earliest>
+          <latest>$TimeRange.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table depends="$viewLookupContent$">
+        <search>
+          <query>| inputlookup legit_powershell_scripts.csv 
+| eval system_group=split(system_group,"|"), search_group=if("$indexSelect$"=="wineventlog-wp", "workstations","servers")
+| where system_group=search_group
+| table script_file, script_location, options, hash_type, hash, system_group</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+</form>
