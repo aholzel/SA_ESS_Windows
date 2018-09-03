@@ -37,7 +37,7 @@
       <single>
         <title># Default accounts in use</title>
         <search>
-          <query>| tstats `summariesonly` max(_time) as _time,values(Authentication.user_category) as user_category,dc(Authentication.dest) as dc(dest) from datamodel=Authentication where Authentication.user_category=default   by Authentication.user | stats count</query>
+          <query>| tstats summariesonly=t max(_time) as _time,values(Authentication.user_category) as user_category,dc(Authentication.dest) as dc(dest) from datamodel=Authentication where Authentication.user_category=default   by Authentication.user | stats count</query>
         </search>
         <option name="drilldown">none</option>
         <option name="linkView">search</option>
@@ -47,7 +47,7 @@
       <single>
         <title># Interactive service account logons</title>
         <search>
-          <query>| tstats `summariesonly` max(_time) as _time,values(Authentication.user_category) as user_category,dc(Authentication.dest) as dc(dest),values(Authentication.tag) as tag, from datamodel=Authentication where Authentication.user_category=interactive_no AND Authentication.tag=login_interactive by Authentication.user | stats count</query>
+          <query>| tstats summariesonly=t max(_time) as _time,values(Authentication.user_category) as user_category,dc(Authentication.dest) as dc(dest),values(Authentication.tag) as tag, from datamodel=Authentication where Authentication.user_category=interactive_no AND Authentication.tag=login_interactive by Authentication.user | stats count</query>
         </search>
         <drilldown>
           <link>
@@ -64,7 +64,7 @@
     <panel>
       <chart id="element1">
         <title>Default Account Usage Over Time By App</title>
-        <searchTemplate>| tstats `summariesonly` count from datamodel=Authentication where nodename=Authentication.Default_Authentication Authentication.action=success $dm_bunit$ $dm_category$ by _time,Authentication.app span=1h | timechart minspan=1h count by Authentication.app | `drop_dm_object_name("Authentication")`</searchTemplate>
+        <searchTemplate>| tstats summariesonly=t count from datamodel=Authentication where nodename=Authentication.Default_Authentication Authentication.action=success $dm_bunit$ $dm_category$ by _time,Authentication.app span=1h | timechart minspan=1h count by Authentication.app | `drop_dm_object_name("Authentication")`</searchTemplate>
         <option name="charting.axisTitleX.text">time</option>
         <option name="charting.axisTitleY.text">count</option>
         <option name="charting.chart">line</option>
@@ -79,7 +79,7 @@
     <panel>
       <table id="element2">
         <title>Default Accounts In Use</title>
-        <searchTemplate>| tstats `summariesonly` max(_time) as _time,values(Authentication.user_category) as user_category,dc(Authentication.dest) as dc(dest) from datamodel=Authentication where Authentication.user_category=default $dm_bunit$ $dm_category$ by Authentication.user | `drop_dm_object_name("Authentication")` | sort 100 - _time | fields _time,user,user_category,dc(dest)</searchTemplate>
+        <searchTemplate>| tstats summariesonly=t max(_time) as _time,values(Authentication.user_category) as user_category,dc(Authentication.dest) as dc(dest) from datamodel=Authentication where Authentication.user_category=default $dm_bunit$ $dm_category$ by Authentication.user | `drop_dm_object_name("Authentication")` | sort 100 - _time | fields _time,user,user_category,dc(dest)</searchTemplate>
         <drilldown>
           <link>access_search?form.user=$row.user$&amp;earliest=$earliest$&amp;latest=$latest$</link>
         </drilldown>
@@ -88,7 +88,7 @@
     <panel>
       <table id="element4">
         <title>Interactive Service account login</title>
-        <searchTemplate>| tstats `summariesonly` max(_time) as _time,values(Authentication.user_category) as user_category,dc(Authentication.dest) as dc(dest),values(Authentication.tag) as tag, from datamodel=Authentication where Authentication.user_category=interactive_no AND Authentication.tag=login_interactive by Authentication.user |`drop_dm_object_name("Authentication")` | sort 100 - _time | fields _time,user,user_category,dc(dest)</searchTemplate>
+        <searchTemplate>| tstats summariesonly=t max(_time) as _time,values(Authentication.user_category) as user_category,dc(Authentication.dest) as dc(dest),values(Authentication.tag) as tag, from datamodel=Authentication where Authentication.user_category=interactive_no AND Authentication.tag=login_interactive by Authentication.user |`drop_dm_object_name("Authentication")` | sort 100 - _time | fields _time,user,user_category,dc(dest)</searchTemplate>
         <drilldown>
           <link>access_search?form.user=$row.user$&amp;earliest=$earliest$&amp;latest=$latest$</link>
         </drilldown>

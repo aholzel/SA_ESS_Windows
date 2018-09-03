@@ -13,7 +13,7 @@
       <choice value="*">ALL</choice>
       <default>*</default>
       <search>
-        <query>| tstats `summariesonly` values(Authentication.src_nt_domain) as domains from datamodel=Authentication where nodename=Authentication.Failed_Authentication Authentication.action="failure"
+        <query>| tstats summariesonly=t values(Authentication.src_nt_domain) as domains from datamodel=Authentication where nodename=Authentication.Failed_Authentication Authentication.action="failure"
 | mvexpand domains
 | sort domains</query>
         <earliest>$TimeRange.earliest$</earliest>
@@ -28,7 +28,7 @@
       <table>
         <title>User accounts with more than 10 lockout reports</title>
         <search>
-          <query>| tstats `summariesonly` count, min(_time) AS first, max(_time) AS last from datamodel=Change_Analysis where nodename=All_Changes.Account_Management All_Changes.result="lockout" All_Changes.Account_Management.src_nt_domain=$domain$ by All_Changes.src,All_Changes.dest,All_Changes.Account_Management.src_nt_domain,All_Changes.user
+          <query>| tstats summariesonly=t count, min(_time) AS first, max(_time) AS last from datamodel=Change_Analysis where nodename=All_Changes.Account_Management All_Changes.result="lockout" All_Changes.Account_Management.src_nt_domain=$domain$ by All_Changes.src,All_Changes.dest,All_Changes.Account_Management.src_nt_domain,All_Changes.user
 | sort - count 
 | where count &gt; 10
 | `drop_dm_object_name("All_Changes")` 
@@ -48,7 +48,7 @@
       <title>Failed login by source host, source domain</title>
       <table>
         <search>
-          <query>| tstats `summariesonly` count, min(_time) AS first, max(_time) AS last, values(Authentication.user) as user values(Authentication.dest) as dest from datamodel=Authentication where nodename=Authentication.Failed_Authentication Authentication.action="failure" Authentication.src_nt_domain=$domain$ by Authentication.src,Authentication.src_nt_domain
+          <query>| tstats summariesonly=t count, min(_time) AS first, max(_time) AS last, values(Authentication.user) as user values(Authentication.dest) as dest from datamodel=Authentication where nodename=Authentication.Failed_Authentication Authentication.action="failure" Authentication.src_nt_domain=$domain$ by Authentication.src,Authentication.src_nt_domain
 | sort - count 
 | `drop_dm_object_name("Authentication")` 
 | `drop_dm_object_name("Failed_Authentication")`
