@@ -1,6 +1,6 @@
 <form>
   <search id="BaseSearch">
-    <query>`winevent_security` EventCode="4720" | fields src_nt_domain src_user Account_Name Account_Domain src_user_category</query>
+    <query>`winevent_security` EventCode="4720" | table src_nt_domain src_user Account_Name Account_Domain src_user_category</query>
     <earliest>$timeRange.earliest$</earliest>
     <latest>$timeRange.latest$</latest>
   </search>

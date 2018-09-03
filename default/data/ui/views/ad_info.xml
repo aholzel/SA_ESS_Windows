@@ -15,7 +15,7 @@
     passwordInUseYears=if(passwordInUseYears==currentYear,0,passwordInUseYears),
     machineAccount=if(substr(sAMAccountName,-1)=="$", 1, 0) 
 | sort - pwdLastSetDays + lastLogonDays  
-| fields machineAccount sAMAccountName whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
+| table machineAccount sAMAccountName whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
   </search>
     <label>AD info</label>
   <row>

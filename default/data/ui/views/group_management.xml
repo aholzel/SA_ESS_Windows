@@ -1,16 +1,19 @@
 <form>
   <search id="BaseSearch">
-    <query>`winevent_security` (EventCode=4727 OR EventCode=4728 OR EventCode=4729 OR EventCode=4730 OR EventCode=4731 OR EventCode=4732 OR EventCode=4733 OR EventCode=4734 OR EventCode=4735 OR EventCode=4737 OR EventCode=4754 OR EventCode=4755 OR EventCode=4756 OR EventCode=4757 OR EventCode=4758)</query>
+    <query>`winevent_security` (EventCode=4727 OR EventCode=4728 OR EventCode=4729 OR EventCode=4730 OR EventCode=4731 OR EventCode=4732 OR EventCode=4733 OR EventCode=4734 OR EventCode=4735 OR EventCode=4737 OR EventCode=4754 OR EventCode=4755 OR EventCode=4756 OR EventCode=4757 OR EventCode=4758) 
+    | table name subject Account_Domain Account_Name Group_Domain Group_Name group_type group_action Security_ID</query>
     <earliest>$TimeRange.earliest$</earliest>
     <latest>$TimeRange.latest$</latest>
   </search>
   <search id="GroupSearch">
-    <query>`winevent_security` (EventCode=4727 OR EventCode=4730 OR EventCode=4731 OR EventCode=4734 OR EventCode=4735 OR EventCode=4737 OR EventCode=4754 OR EventCode=4755 OR EventCode=4758)</query>
+    <query>`winevent_security` (EventCode=4727 OR EventCode=4730 OR EventCode=4731 OR EventCode=4734 OR EventCode=4735 OR EventCode=4737 OR EventCode=4754 OR EventCode=4755 OR EventCode=4758)
+    | table name subject Account_Domain Account_Name Group_Domain Group_Name group_type group_action Security_ID</query>
     <earliest>$TimeRange.earliest$</earliest>
     <latest>$TimeRange.latest$</latest>
   </search>
   <search id="MemberSearch">
-    <query>`winevent_security` (EventCode=4728 OR EventCode=4729 OR EventCode=4732 OR EventCode=4733 OR EventCode=4756 OR EventCode=4757)</query>
+    <query>`winevent_security` (EventCode=4728 OR EventCode=4729 OR EventCode=4732 OR EventCode=4733 OR EventCode=4756 OR EventCode=4757)
+    | table name subject Account_Domain Account_Name Group_Domain Group_Name group_type group_action Security_ID</query>
     <earliest>$TimeRange.earliest$</earliest>
     <latest>$TimeRange.latest$</latest>
   </search>

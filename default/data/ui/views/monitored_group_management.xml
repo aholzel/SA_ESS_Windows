@@ -3,7 +3,8 @@
     <query>`winevent_security` EventCode=5136 [ | inputlookup monitored_groups.csv | rename GUID AS DN]
 | eval result = mvindex(Type,2)
 | rex field=result "\w+\s(?&lt;Operation&gt;\w+)"
-| rex field=Message "(?ms)LDAP\sDisplay\sName\:\s+(?&lt;LDAP_Attribute&gt;[^\s]+).*?Value\:\s+(?&lt;LDAP_Value&gt;[^\s]+)"</query>
+| rex field=Message "(?ms)LDAP\sDisplay\sName\:\s+(?&lt;LDAP_Attribute&gt;[^\s]+).*?Value\:\s+(?&lt;LDAP_Value&gt;[^\s]+)"
+| table LDAP_Value Account_Name DN Operation LDAP_Attribute DN</query>
     <earliest>$TimeRange.earliest$</earliest>
     <latest>$TimeRange.latest$</latest>
   </search>
