@@ -282,7 +282,7 @@ EventCode,status_code,signature,CategoryString,action,result,change_type,object_
 4716,-,Trusted domain information was modified,Authentication Policy Change,,,Authentication,policy
 4717,-,System security access was granted to an account,Authentication Policy Change,,,Authentication,policy
 4718,-,System security access was removed from an account,Authentication Policy Change,,,Authentication,policy
-4719,-,System audit policy was changed,Audit Policy Change,,,,
+4719,-,System audit policy was changed,Audit Policy Change,,Audit,policy,
 4720,-,A user account was created,User Account Management,created,,Authentication,user
 4722,-,A user account was enabled,User Account Management,modified,,Authorization,user
 4723,-,An attempt was made to change an account's password,User Account Management,updated,,Authentication,user

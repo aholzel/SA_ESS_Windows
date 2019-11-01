@@ -101,7 +101,7 @@
     <panel>
       <table>
         <search>
-          <query>index=$indexSelect$ `security_log` EventCode=4688 host="$hostText$" (src_user="$userText$" OR user="$userText$") process_parameters=* (process_exe="powershell*" OR process_command="powershell*") process_command!=*splunk* NOT [ | inputlookup legit_powershell_scripts.csv | eval system_group=split(system_group, "|") | where system_group="$system_group$" | fields script_file ]
+          <query>index=$indexSelect$ `security_log` EventCode=4688 host="$hostText$" (src_user="$userText$" OR user="$userText$") process_parameters=* (process_exec="powershell*" OR process_command="powershell*") process_command!=*splunk* NOT [ | inputlookup legit_powershell_scripts.csv | eval system_group=split(system_group, "|") | where system_group="$system_group$" | fields script_file ]
 | eval process_length=len(process_parameters),
   powershell_options_snipped=if(len(process_parameters)&lt;130, process_parameters, substr(process_parameters,0,130)." ****SNIP**** "),
   powershell_script=coalesce(script_file, remote_script, ""),
@@ -109,8 +109,8 @@
 | `ps_suspicious_command($maxLengthText$,$perc_AN$)`
 | search $suspiciousCommandSelect$
 | sort - _time
-| table _time host src_user user process_exe powershell_script powershell_options_snipped suspicious_command earliest earliest_min_xd latest process_parameters perc_non_AN process_length Creator_Process_ID New_Process_ID
-| rename host AS Host, src_user AS "Source User", user AS "Target User", process_exe AS "Process EXE", powershell_script AS "Script file", powershell_options_snipped AS "Powershell options", suspicious_command AS "Suspicious (reason)", perc_non_AN AS "% Non alphanumeric", process_length AS Length</query>
+| table _time host src_user user process_exec powershell_script powershell_options_snipped suspicious_command earliest earliest_min_xd latest process_parameters perc_non_AN process_length Creator_Process_ID New_Process_ID
+| rename host AS Host, src_user AS "Source User", user AS "Target User", process_exec AS "Process EXE", powershell_script AS "Script file", powershell_options_snipped AS "Powershell options", suspicious_command AS "Suspicious (reason)", perc_non_AN AS "% Non alphanumeric", process_length AS Length</query>
           <earliest>$TimeRange.earliest$</earliest>
           <latest>$TimeRange.latest$</latest>
           <sampleRatio>1</sampleRatio>
