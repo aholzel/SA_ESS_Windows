@@ -1,0 +1,4 @@
+EventCode,status_code,SourceName,signature,CategoryString,action,result,change_type,object_category
+18453,,MSSQL$INST*,MSSQL Login succeeded using Windows authentication,Logon/Logoff Event,success,,,
+18454,,MSSQL$INST*,MSSQL Login succeeded using SQL Server authentication,Logon/Logoff Event,success,,,
+18456,,MSSQL$INST*,MSSQL Login Login failed,Logon/Logoff Event,failure,,,

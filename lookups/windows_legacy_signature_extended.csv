@@ -1,0 +1,142 @@
+EventCode,status_code,signature,CategoryString,action,result,change_type,object_category
+512,-,Windows NT is starting up,Security State Change,,,,
+513,-,Windows is shutting down,Security State Change,,,,
+514,-,An authentication package has been loaded by the Local Security Authority,,,,,
+515,-,A trusted logon process has registered with the Local Security Authority,,,,,
+516,-,"Internal resources allocated for the queuing of audit messages have been exhausted, leading to the loss of some audits",,,,,
+517,-,The audit log was cleared,,cleared,,audit,audit
+518,-,A notification package has been loaded by the Security Account Manager,,,,,
+519,-,A process is using an invalid local procedure call (LPC) port,,,,,
+520,-,The system time was changed,,,,,
+528,-,Successful Logon,,,,,
+529,-,Logon Failure: Unknown user name or bad password,,,,,
+530,-,Logon Failure: Account logon time restriction violation,,,,,
+531,-,Logon Failure: Account currently disabled,,,,,
+532,-,Logon Failure: The specified user account has expired,Logon/Logoff Event,failure,,,
+533,-,Logon Failure: User not allowed to logon at this computer,,,,,
+534,-,Logon Failure: The user has not been granted the requested logon type at this machine,,,,,
+535,-,Logon Failure: The specified account's password has expired,Logon/Logoff Event,failure,,,
+536,-,The NetLogon component is not active,,,,,
+537,-,Logon Failure: The logon attempt failed for other reasons.,,,,,
+538,-,User Logoff,,,,,
+539,-,Logon Failure: Account locked out,Logon/Logoff Event,failure,,,
+540,-,Successful Network Logon,,,,,
+551,-,User initiated logoff,,,,,
+552,-,Logon attempt using explicit credentials,,,,,
+560,-,Object Open,,,,,
+561,-,Handle Allocated,,,,,
+562,-,Handle Closed,,,,,
+563,-,Object Open for Delete,,,,,
+564,-,Object Deleted,,,,,
+565,-,Object Open (Active Directory),,,,,
+566,-,Object Operation (W3 Active Directory),,,,,
+567,-,Object Access Attempt,,,,,
+576,-,Special privileges assigned to new logon,,,,,
+577,-,Privileged Service Called,,,,,
+578,-,Privileged object operation,,,,,
+592,-,A new process has been created,,,,,
+593,-,A process has exited,,,,,
+594,-,A handle to an object has been duplicated,,,,,
+595,-,Indirect access to an object has been obtained,,,,,
+600,-,A process was assigned a primary token,,,,,
+601,-,Attempt to install service,,,,,
+602,-,Scheduled Task created,,,,,
+608,-,User Right Assigned,,,,,
+609,-,User Right Removed,,,,,
+610,-,New Trusted Domain,Authentication Policy Change,,,Authentication,policy
+611,-,Removing Trusted Domain,Authentication Policy Change,,,Authentication,policy
+612,-,Audit Policy Change,,,,,
+613,-,IPSec policy agent started,,,,,
+614,-,IPSec policy agent disabled,,,,,
+615,-,IPSEC PolicyAgent Service,,,,,
+616,-,IPSec policy agent encountered a potentially serious failure.,,,,,
+617,-,Kerberos Policy Changed,,,,,
+618,-,Encrypted Data Recovery Policy Changed,,,,,
+619,-,Quality of Service Policy Changed,,,,,
+620,-,Trusted Domain Information Modified,Authentication Policy Change,,,Authentication,policy
+621,-,System Security Access Granted,,,,,
+622,-,System Security Access Removed,,,,,
+623,-,Per User Audit Policy was refreshed,,,,,
+624,-,User Account Created,User Account Management,created,,Authentication,user
+625,-,User Account Type Changed,User Account Management,modified,,Authentication,user
+626,-,User Account Enabled,User Account Management,modified,,Authentication,user
+627,-,Change Password Attempt,User Account Management,modified,,Authentication,user
+628,-,User Account password set,User Account Management,modified,,Authentication,user
+629,-,User Account Disabled,User Account Management,modified,,Authentication,user
+630,-,User Account Deleted,User Account Management,deleted,,Authentication,user
+631,-,Security Enabled Global Group Created,Security Group Management,created,,Authorization,group:sec
+632,-,Security Enabled Global Group Member Added,Security Group Management,modified,,Authorization,group:sec
+633,-,Security Enabled Global Group Member Removed,Security Group Management,modified,,Authorization,group:sec
+634,-,Security Enabled Global Group Deleted,Security Group Management,deleted,,Authorization,group:sec
+635,-,Security Enabled Local Group Created,Security Group Management,created,,Authorization,group:sec
+636,-,Security Enabled Local Group Member Added,Security Group Management,modified,,Authorization,group:sec
+637,-,Security Enabled Local Group Member Removed,Security Group Management,modified,,Authorization,group:sec
+638,-,Security Enabled Local Group Deleted,Security Group Management,deleted,,Authorization,group:sec
+639,-,Security Enabled Local Group Changed,Security Group Management,modified,,Authorization,group:sec
+640,-,General Account Database Change,,,,,
+641,-,Security Enabled Global Group Changed,Security Group Management,modified,,Authorization,group:sec
+642,-,User Account Changed,User Account Management,modified,,Authorization,user
+643,-,Domain Policy Changed,Other Account Management,modified,,domain,policy
+644,-,User Account Locked Out,User Account Management,modified,lockout,user,user
+645,-,Computer Account Created,Computer Account Management,created,,Authentication,computer
+646,-,Computer Account Changed,Computer Account Management,modified,,Authentication,computer
+647,-,Computer Account Deleted,Computer Account Management,deleted,,Authentication,computer
+648,-,Security Disabled Local Group Created,Distribution Group Management,,,Authorization,group:dis
+649,-,Security Disabled Local Group Changed,Distribution Group Management,,,Authorization,group:dis
+650,-,Security Disabled Local Group Member Added,Distribution Group Management,,,Authorization,group:dis
+651,-,Security Disabled Local Group Member Removed,Distribution Group Management,,,Authorization,group:dis
+652,-,Security Disabled Local Group Deleted,Distribution Group Management,,,Authorization,group:dis
+653,-,Security Disabled Global Group Created,Distribution Group Management,,,Authorization,group:dis
+654,-,Security Disabled Global Group Changed,Distribution Group Management,,,Authorization,group:dis
+655,-,Security Disabled Global Group Member Added,Distribution Group Management,,,Authorization,group:dis
+656,-,Security Disabled Global Group Member Removed,Distribution Group Management,,,Authorization,group:dis
+657,-,Security Disabled Global Group Deleted,Distribution Group Management,,,Authorization,group:dis
+658,-,Security Enabled Universal Group Created,Security Group Management,,,Authorization,group:sec
+659,-,Security Enabled Universal Group Changed,Security Group Management,,,Authorization,group:sec
+660,-,Security Enabled Universal Group Member Added,Security Group Management,,,Authorization,group:sec
+661,-,Security Enabled Universal Group Member Removed,Security Group Management,,,Authorization,group:sec
+662,-,Security Enabled Universal Group Deleted,Security Group Management,,,Authorization,group:sec
+663,-,Security Disabled Universal Group Created,Distribution Group Management,,,Authorization,group:dis
+664,-,Security Disabled Universal Group Changed,Distribution Group Management,,,Authorization,group:dis
+665,-,Security Disabled Universal Group Member Added,Distribution Group Management,,,Authorization,group:dis
+666,-,Security Disabled Universal Group Member Removed,Distribution Group Management,,,Authorization,group:dis
+667,-,Security Disabled Universal Group Deleted,Distribution Group Management,,,Authorization,group:dis
+668,-,Group Type Changed,Security Group Management,modified,,,
+669,-,Add SID History,,,,,
+670,-,Add SID History,,,,,
+671,-,User Account Unlocked,User Account Management,,,,
+672,-,Authentication Ticket Granted,,,,,
+673,-,Service Ticket Granted,,,,,
+674,-,Ticket Granted Renewed,,,,,
+675,-,Pre-authentication failed,,,,,
+676,-,Authentication Ticket Request Failed,,,,,
+677,-,Service Ticket Request Failed,,,,,
+678,-,Account Mapped for Logon by,,,,,
+679,-,The name: %2 could not be mapped for logon by: %1,,,,,
+680,-,Account Used for Logon by,,,,,
+681,-,The logon to account: %2 by: %1 from workstation: %3 failed.,,,,,
+682,-,Session reconnected to winstation,,,,,
+683,-,Session disconnected from winstation,,,,,
+684,-,Set ACLs of members in administrators groups,User Account Management,,,,
+685,-,Account Name Changed,User Account Management,,,,
+686,-,Password of the following user accessed,User Account Management,,,,
+687,-,Basic Application Group Created,Application Group Management,created,,Authorization,group:app
+688,-,Basic Application Group Changed,Application Group Management,modified,,Authorization,group:app
+689,-,Basic Application Group Member Added,Application Group Management,added,,Authorization,group:app
+690,-,Basic Application Group Member Removed,Application Group Management,modified,,Authorization,group:app
+691,-,Basic Application Group Non-Member Added,Application Group Management,added,,Authorization,group:app
+692,-,Basic Application Group Non-Member Removed,Application Group Management,modified,,Authorization,group:app
+693,-,Basic Application Group Deleted,Application Group Management,deleted,,Authorization,group:app
+694,-,LDAP Query Group Created,Application Group Management,created,,Authorization,group:app
+695,-,LDAP Query Group Changed,Application Group Management,modified,,Authorization,group:app
+696,-,LDAP Query Group Deleted,Application Group Management,deleted,,Authorization,group:app
+697,-,Password Policy Checking API is called,Other Account Management,,,,
+806,-,Per User Audit Policy was refreshed,,,,,
+807,-,Per user auditing policy set for user,,,,,
+808,-,A security event source has attempted to register,,,,,
+809,-,A security event source has attempted to unregister,,,,,
+848,-,The following policy was active when the Windows Firewall started,,,,,
+849,-,An application was listed as an exception when the Windows Firewall started,,,,,
+850,-,A port was listed as an exception when the Windows Firewall started,,,,,
+852,-,A change has been made to the Windows Firewall port exception list,,,,,
+861,-,The Windows Firewall has detected an application listening for incoming traffic,,,,,
