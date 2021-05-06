@@ -1,19 +1,19 @@
 <form>
   <search id="BaseSearch">
-    <query>`winevent_security` (EventCode=4727 OR EventCode=4728 OR EventCode=4729 OR EventCode=4730 OR EventCode=4731 OR EventCode=4732 OR EventCode=4733 OR EventCode=4734 OR EventCode=4735 OR EventCode=4737 OR EventCode=4754 OR EventCode=4755 OR EventCode=4756 OR EventCode=4757 OR EventCode=4758) 
-    | table name subject Account_Domain Account_Name Group_Domain Group_Name group_type group_action Security_ID</query>
+    <query>`winevent_security` ("EventCode=4727" OR "EventCode=4728" OR "EventCode=4729" OR "EventCode=4730" OR "EventCode=4731" OR "EventCode=4732" OR "EventCode=4733" OR "EventCode=4734" OR "EventCode=4735" OR "EventCode=4737" OR "EventCode=4754" OR "EventCode=4755" OR "EventCode=4756" OR "EventCode=4757" OR "EventCode=4758") 
+    | table name signature Account_Domain Account_Name Group_Domain Group_Name group_type group_action Security_ID</query>
     <earliest>$TimeRange.earliest$</earliest>
     <latest>$TimeRange.latest$</latest>
   </search>
   <search id="GroupSearch">
-    <query>`winevent_security` (EventCode=4727 OR EventCode=4730 OR EventCode=4731 OR EventCode=4734 OR EventCode=4735 OR EventCode=4737 OR EventCode=4754 OR EventCode=4755 OR EventCode=4758)
-    | table name subject Account_Domain Account_Name Group_Domain Group_Name group_type group_action Security_ID</query>
+    <query>`winevent_security` ("EventCode=4727" OR "EventCode=4730" OR "EventCode=4731" OR "EventCode=4734" OR "EventCode=4735" OR "EventCode=4737" OR "EventCode=4754" OR "EventCode=4755" OR "EventCode=4758")
+    | table name signature Account_Domain Account_Name Group_Domain Group_Name group_type group_action Security_ID</query>
     <earliest>$TimeRange.earliest$</earliest>
     <latest>$TimeRange.latest$</latest>
   </search>
   <search id="MemberSearch">
-    <query>`winevent_security` (EventCode=4728 OR EventCode=4729 OR EventCode=4732 OR EventCode=4733 OR EventCode=4756 OR EventCode=4757)
-    | table name subject Account_Domain Account_Name Group_Domain Group_Name group_type group_action Security_ID</query>
+    <query>`winevent_security` ("EventCode=4728" OR "EventCode=4729" OR "EventCode=4732" OR "EventCode=4733" OR "EventCode=4756" OR "EventCode=4757")
+    | table name signature Account_Domain Account_Name Group_Domain Group_Name group_type group_action Security_ID</query>
     <earliest>$TimeRange.earliest$</earliest>
     <latest>$TimeRange.latest$</latest>
   </search>
@@ -32,10 +32,8 @@
       <chart>
         <title>Actions by group type</title>
         <search base="BaseSearch">
-          <query>| rex field=name "security-enabled\s(?&lt;group_type&gt;\w+)\sgroup" | stats count by group_type</query>
+          <query>| rex field=signature "security-enabled\s(?&lt;group_type&gt;\w+)\sgroup" | stats count by group_type</query>
         </search>
-        <option name="charting.chart">pie</option>
-        <option name="charting.axisY2.enabled">undefined</option>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
         <option name="charting.axisTitleX.visibility">visible</option>
@@ -44,6 +42,7 @@
         <option name="charting.axisX.scale">linear</option>
         <option name="charting.axisY.scale">linear</option>
         <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
         <option name="charting.chart.bubbleMaximumSize">50</option>
         <option name="charting.chart.bubbleMinimumSize">10</option>
         <option name="charting.chart.bubbleSizeBy">area</option>
@@ -55,16 +54,15 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
       </chart>
     </panel>
     <panel>
       <chart>
         <title>Member actions</title>
         <search base="BaseSearch">
-          <query>| rex field=name "(?ms)member\swas\s(?&lt;member_action&gt;\w+)" | eval member_action="Member ".member_action | stats count by member_action</query>
+          <query>| rex field=signature "(?ms)member\swas\s(?&lt;member_action&gt;\w+)" | eval member_action="Member ".member_action | stats count by member_action</query>
         </search>
-        <option name="charting.chart">pie</option>
-        <option name="charting.axisY2.enabled">undefined</option>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
         <option name="charting.axisTitleX.visibility">visible</option>
@@ -73,6 +71,7 @@
         <option name="charting.axisX.scale">linear</option>
         <option name="charting.axisY.scale">linear</option>
         <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">pie</option>
         <option name="charting.chart.bubbleMaximumSize">50</option>
         <option name="charting.chart.bubbleMinimumSize">10</option>
         <option name="charting.chart.bubbleSizeBy">area</option>
@@ -84,13 +83,14 @@
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
       </chart>
     </panel>
     <panel>
       <chart>
         <title>Group actions</title>
         <search base="BaseSearch">
-          <query>| rex field=name "(?ms)group\swas\s(?&lt;group_action&gt;\w+)" | eval group_action="Group ".group_action | stats count by group_action</query>
+          <query>| rex field=signature "(?ms)group\swas\s(?&lt;group_action&gt;\w+)" | eval group_action="Group ".group_action | stats count by group_action</query>
         </search>
         <option name="charting.chart">pie</option>
         <option name="charting.axisY2.enabled">undefined</option>
@@ -121,7 +121,7 @@
       <table>
         <title>Group Actions</title>
         <search base="GroupSearch">
-          <query>| rex field=subject "A\ssecurity-enabled\s(?&lt;group_type&gt;\w+)\sgroup\swas\s(?&lt;group_action&gt;\w+)"
+          <query>| rex field=signature "A\ssecurity-enabled\s(?&lt;group_type&gt;\w+)\sgroup\swas\s(?&lt;group_action&gt;\w+)"
 | table Account_Domain Account_Name Group_Domain Group_Name group_type group_action
 | rename Account_Domain AS "User Domain", Account_Name AS "Executing User", Group_Domain AS "Group Domain", group_type AS "Group Type", group_action AS "Action"</query>
           <earliest>$TimeRange.earliest$</earliest>
@@ -145,15 +145,12 @@
 | eval member_name=mvindex(Account_Name,1)
 | eval subject_domain=mvindex(Account_Domain,0)
 | eval member=if(member_name=="-",member_SID,member_name)
-| rex field=subject "was\s(?&lt;member_action&gt;\w+).*?security-enabled\s(?&lt;group_type&gt;.*)"
+| rex field=signature "was\s(?&lt;member_action&gt;\w+).*?security-enabled\s(?&lt;group_type&gt;.*)"
 | table subject_domain subject_name member_action member Group_Domain Group_Name group_type
 | rename subject_domain AS "User Domain", subject_name AS "Executing User", member_action AS "Action", member AS "Group Member", Group_Domain AS "Group Domain", Group_Name AS "Group Name", group_type AS "Group Type"</query>
-          <earliest>$TimeRange.earliest$</earliest>
-          <latest>$TimeRange.latest$</latest>
         </search>
-        <option name="wrap">undefined</option>
-        <option name="rowNumbers">undefined</option>
         <option name="drilldown">row</option>
+        <option name="refresh.display">progressbar</option>
       </table>
     </panel>
   </row>
