@@ -1,7 +1,7 @@
 <dashboard>
   <search id="baseSearchPasswords">
   <query>`admon_index` 
-| stats last(whenCreated) AS whenCreated, last(lastLogon) AS lastLogon, last(pwdLastSet) AS pwdLastSet, last(userAccountControl) AS userAccountControl, last(UAC_explanation) AS UAC_explanation by sAMAccountName   
+| stats latest(whenCreated) AS whenCreated, latest(lastLogon) AS lastLogon, latest(pwdLastSet) AS pwdLastSet, latest(userAccountControl) AS userAccountControl, latest(UAC_explanation) AS UAC_explanation by sAMAccountName   
 | eval lastLogonEpoch=strptime(lastLogon,"%I:%M.%S %p, %a %m/%d/%Y"),
     pwdLastSetEpoch=strptime(pwdLastSet,"%I:%M.%S %p, %a %m/%d/%Y"),
     lastLogon=strftime(strptime(lastLogon,"%I:%M.%S %p, %a %m/%d/%Y"), "%F %T"),
