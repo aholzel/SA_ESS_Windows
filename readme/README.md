@@ -52,3 +52,17 @@ After installation some macros and eventtypes might need to be changed depending
 - winevent_security     : The Windows Security eventlogs. default: `(index=wineventlog source="WinEventLog:Security")`
 - winevent_system       : The Windows System eventlogs. default: `(index=wineventlog source="WinEventLog:System")`
 - winevent_application  : The Windows Application eventlogs. default: `(index=wineventlog source="WinEventLog:Application")`
+
+# Usage 
+## Macros
+### uac_exp
+The `uac_exp` (**U**ser**A**ccount**C**ontrol **EXP**lanation) macro can be used to get a textual explanation for the content of the userAccountControl field. The macro accepts one argument, and wil than calculate all the possible options for that value and return that in a field called `UAC_explain`
+Example 1:
+```
+index=ad 
+| stats latest(userAccountControl) AS userAccountControl by userPricipalName
+| `uac_exp(userAccountControl)`
+| table userPricipalName userAccountControl UAC_explain
+```
+Result:
+![Example 1](/static/uac_exp-example.jpg?raw=true "Results for example 1")

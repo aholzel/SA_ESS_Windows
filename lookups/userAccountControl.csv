@@ -42,11 +42,12 @@ userAccountControl,hex,UAC_explanation
 66050,0x10202,Password does not expire|Normal Account|Account is disabled
 66080,0x10220,Password does not expire|Normal Account|Password not required
 69632,0x11000,Password does not expire|Workstation Trust Account
-131072,0x20000,MNS logon account
+131072,0x20000,Major Node Set (MNS) logon account
 262144,0x40000,Account is forced to log on with a smart card
 262658,0x40202,Account is forced to log on with a smart card|Normal Account|Account is disabled
 262688,0x40220,Account is forced to log on with a smart card|Normal Account|Password not required
 262690,0x40222,Account is forced to log on with a smart card|Normal Account|Password not required|Account is disabled
+328194,0x50202,Account is forced to log on with a smart card|Password does not expire|Normal Account|Account is disabled
 328224,0x50220,Account is forced to log on with a smart card|Password does not expire|Normal Account|Password not required
 328226,0x50222,Account is forced to log on with a smart card|Password does not expire|Normal Account|Password not required|Account is disabled
 524288,0x80000,Trusted for Kerberos delegation
@@ -56,6 +57,7 @@ userAccountControl,hex,UAC_explanation
 1048576,0x100000,Security context of the account is not delegated to a service
 1049088,0x100200,Security context of the account is not delegated to a service|Normal Account
 1049090,0x100202,Security context of the account is not delegated to a service|Normal Account|Account is disabled
+1114624,0x110200,Security context of the account is not delegated to a service|Password does not expire|Normal Account
 2097152,0x200000,Use DES key only
 2166786,0x211002,Use DES key only|Password does not expire|Workstation Trust Account|Account is disabled
 4194304,0x400000,Account does not require Kerberos pre-authentication for logging on
@@ -63,5 +65,7 @@ userAccountControl,hex,UAC_explanation
 16777216,0x1000000,Account is enabled for delegation
 16781312,0x1001000,Account is enabled for delegation|Workstation Trust Account
 16843264,0x1010200,Account is enabled for delegation|Password does not expire|Normal Account
+33554432,0x2000000,Privilege Attribute Certificate (PAC) not required
+33554944,0x2000200,Privilege Attribute Certificate (PAC) not required|Normal Account
 67108864,0x4000000,Account is a read-only domain controller
 83890176,0x5001000,Account is a read-only domain controller|Account is enabled for delegation|Workstation Trust Account

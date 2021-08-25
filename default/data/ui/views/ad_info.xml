@@ -1,7 +1,8 @@
-<dashboard>
+<form>
   <search id="baseSearchPasswords">
-  <query>`admon_index` 
-| stats latest(whenCreated) AS whenCreated, latest(lastLogon) AS lastLogon, latest(pwdLastSet) AS pwdLastSet, latest(userAccountControl) AS userAccountControl, latest(UAC_explanation) AS UAC_explanation by sAMAccountName   
+    <query>`admon_index`   
+| stats latest(whenCreated) AS whenCreated, latest(lastLogon) AS lastLogon, latest(pwdLastSet) AS pwdLastSet, latest(userAccountControl) AS userAccountControl, values(admonEventType) AS admonEventType, values(sAMAccountName) AS sAMAccountName by userPrincipalName   
+| lookup userAccountControl.csv userAccountControl output UAC_explanation
 | eval lastLogonEpoch=strptime(lastLogon,"%I:%M.%S %p, %a %m/%d/%Y"),
     pwdLastSetEpoch=strptime(pwdLastSet,"%I:%M.%S %p, %a %m/%d/%Y"),
     lastLogon=strftime(strptime(lastLogon,"%I:%M.%S %p, %a %m/%d/%Y"), "%F %T"),
@@ -13,26 +14,98 @@
     pwdLastSetDays=round((timeNow-pwdLastSetEpoch)/86400,1),
     passwordInUseYears=round((timeNow-pwdLastSetEpoch)/31556926,1),
     passwordInUseYears=if(passwordInUseYears==currentYear,0,passwordInUseYears),
-    machineAccount=if(substr(sAMAccountName,-1)=="$", 1, 0) 
-| sort - pwdLastSetDays + lastLogonDays  
-| table machineAccount sAMAccountName whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
+    machineAccount=if(substr(sAMAccountName,-1)=="$", 1, 0), 
+    UAC_explanation=split(UAC_explanation,"|"),
+    domain=upper(replace(userPrincipalName,"(.*@)([^\.]+)(.*)","\2")) 
+| sort 0 - pwdLastSetDays + lastLogonDays  
+| fields machineAccount sAMAccountName domain whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation
+    </query>
+    <earliest>-60d@h</earliest>
+    <latest>now</latest>
   </search>
-    <label>AD info</label>
+  <label>AD info</label>
+  <fieldset submitButton="true">
+    <input type="multiselect" token="uac_filter">
+      <label>Filter account type</label>
+      <choice value=".*">ALL</choice>
+      <default>.*</default>
+      <prefix>(</prefix>
+      <suffix>)</suffix>
+      <initialValue>.*</initialValue>
+      <valuePrefix>match(UAC_explanation,"</valuePrefix>
+      <valueSuffix>")</valueSuffix>
+      <delimiter> OR </delimiter>
+      <fieldForLabel>UAC_explanation</fieldForLabel>
+      <fieldForValue>UAC_explanation</fieldForValue>
+      <search>
+        <query>| inputlookup userAccountControl.csv
+| table UAC_explanation
+| eval UAC_explanation=split(UAC_explanation,"|")
+| mvexpand UAC_explanation
+| stats c by UAC_explanation</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+    <input type="dropdown" token="last_logon_filter">
+      <label>Last logon</label>
+      <choice value="isnull(lastLogonDays) OR isnotnull(lastLogonDays)">Doesn't mather</choice>
+      <choice value="lastLogonDays&lt;=30">&lt;= 30 days</choice>
+      <choice value="lastLogonDays&lt;=60">&lt;= 60 days</choice>
+      <choice value="lastLogonDays&lt;=90">&lt;= 90 days</choice>
+      <choice value="lastLogonDays&lt;=180">&lt;= 180 days</choice>
+      <choice value="lastLogonDays&lt;=365">&lt;= 365 days</choice>
+      <choice value="lastLogonDays&gt;=365">&gt;= 365 days</choice>
+      <default>isnull(lastLogonDays) OR isnotnull(lastLogonDays)</default>
+      <prefix>| where </prefix>
+      <initialValue>isnull(lastLogonDays) OR isnotnull(lastLogonDays)</initialValue>
+    </input>
+    <input type="multiselect" token="domain_filter">
+      <label>Domain</label>
+      <choice value="*">All</choice>
+      <default>*</default>
+      <prefix>| search (</prefix>
+      <suffix>)</suffix>
+      <initialValue>*</initialValue>
+      <valuePrefix>domain="</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+      <delimiter> OR </delimiter>
+      <fieldForLabel>domain</fieldForLabel>
+      <fieldForValue>domain</fieldForValue>
+      <search>
+        <query>`admon_index` 
+| stats c by userPrincipalName 
+| eval domain=upper(replace(userPrincipalName,"(.*@)([^\.]+)(.*)","\2")) 
+| stats c by domain
+| where domain!="OPTIONALPROPERTIES"</query>
+        <earliest>-60d</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+    <input type="text" token="account_name_search">
+      <label>sAMAccountName search</label>
+      <default>*</default>
+      <prefix>sAMAccountName="</prefix>
+      <suffix>"</suffix>
+      <initialValue>*</initialValue>
+    </input>
+  </fieldset>
   <row>
     <panel>
       <table>
         <title>"user" accounts with old passwords (90+ days ) - last 60 days</title>
         <search base="baseSearchPasswords">
-          <query>| where pwdLastSetDays&gt;90 AND machineAccount==0
-| table sAMAccountName whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
-          <earliest>-60d@d</earliest>
-          <latest>now</latest>
+          <query>$last_logon_filter$ 
+$domain_filter$ $account_name_search$
+| where pwdLastSetDays&gt;90 AND machineAccount==0 AND NOT match(admonEventType,".*Deleted.*") AND $uac_filter$ 
+| table sAMAccountName domain whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
         </search>
-        <option name="wrap">true</option>
-        <option name="rowNumbers">true</option>
+        <option name="count">10</option>
         <option name="dataOverlayMode">none</option>
         <option name="drilldown">cell</option>
-        <option name="count">10</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">true</option>
+        <option name="wrap">true</option>
       </table>
     </panel>
   </row>
@@ -41,31 +114,35 @@
       <table>
         <title>"machine" accounts with old passwords (30+ days) - last 60 days</title>
         <search base="baseSearchPasswords">
-          <query>| where pwdLastSetDays&gt;30 AND machineAccount==1
-| table sAMAccountName whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
+          <query>$last_logon_filter$ 
+$domain_filter$ $account_name_search$
+| where pwdLastSetDays&gt;30 AND machineAccount==1 AND $uac_filter$
+| table sAMAccountName domain whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
         </search>
-        <option name="wrap">undefined</option>
-        <option name="rowNumbers">undefined</option>
-        <option name="drilldown">row</option>
-        <option name="dataOverlayMode">none</option>
         <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="refresh.display">progressbar</option>
       </table>
     </panel>
   </row>
   <row>
     <panel>
       <table>
-        <title>{GROUP} members - last 7 days</title>
+        <title>"{GROUP}" members - last 7 days</title>
         <search>
-          <query>`admon_index` sAMAccountName={GROUP} | eval members=split(member, "|") | mvexpand members | table members</query>
+          <query>`admon_index` sAMAccountName={GROUP}
+| stats latest(member) AS member
+| eval members=split(member, "|")
+| fields members
+| mvexpand members</query>
           <earliest>-7d@h</earliest>
           <latest>now</latest>
         </search>
-        <option name="wrap">undefined</option>
-        <option name="rowNumbers">undefined</option>
-        <option name="drilldown">row</option>
-        <option name="dataOverlayMode">none</option>
         <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="refresh.display">progressbar</option>
       </table>
     </panel>
   </row>
@@ -74,16 +151,21 @@
       <table>
         <title>Operating Systems in use - last 30 days</title>
         <search>
-          <query>`admon_index` objectClass=*computer* | dedup dNSHostName | fillnull value="N/A" operatingSystemServicePack | stats latest(_time) AS lastReportTime, values(dNSHostName) AS Hostnames, count by operatingSystem operatingSystemServicePack | eval lastReportTime=strftime(lastReportTime, "%F %T"), Hostnames=if(count&gt;20, "**To many Hostnames to display**", Hostnames)</query>
+          <query>`admon_index` objectClass=*computer* 
+| fillnull value="N/A" operatingSystemServicePack
+| stats latest(operatingSystem) AS operatingSystem, latest(operatingSystemServicePack) AS operatingSystemServicePack, max(_time) AS _time by dNSHostName
+| stats latest(_time) AS lastReportTime, values(dNSHostName) AS Hostnames, count by operatingSystem operatingSystemServicePack 
+| eval lastReportTime=strftime(lastReportTime, "%F %T"), Hostnames=if(count&gt;20, "**To many Hostnames to display**", Hostnames)</query>
           <earliest>-30d@d</earliest>
           <latest>now</latest>
         </search>
-        <option name="wrap">true</option>
-        <option name="rowNumbers">true</option>
-        <option name="drilldown">cell</option>
-        <option name="dataOverlayMode">none</option>
         <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">true</option>
+        <option name="wrap">true</option>
       </table>
     </panel>
   </row>
-</dashboard>
+</form>
