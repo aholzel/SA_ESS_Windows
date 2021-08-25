@@ -56,7 +56,7 @@ After installation some macros and eventtypes might need to be changed depending
 # Usage 
 ## Macros
 ### uac_exp
-The `uac_exp` (**U**ser**A**ccount**C**ontrol **EXP**lanation) macro can be used to get a textual explanation for the content of the userAccountControl field. The macro accepts one argument, and wil than calculate all the possible options for that value and return that in a field called `UAC_explain`
+The `uac_exp` (**U**ser**A**ccount**C**ontrol **EXP**lanation) macro can be used to get a textual explanation for the content of the userAccountControl field. The macro accepts one argument, and wil than calculate all the possible options for that value and return that in a field called `UAC_explain` <br />
 Example 1:
 ```
 index=ad 
