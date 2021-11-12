@@ -2,7 +2,7 @@
   <search id="baseSearchPasswords">
     <query>`admon_index`   
 | stats latest(whenCreated) AS whenCreated, latest(lastLogon) AS lastLogon, latest(pwdLastSet) AS pwdLastSet, latest(userAccountControl) AS userAccountControl, values(admonEventType) AS admonEventType, values(sAMAccountName) AS sAMAccountName by userPrincipalName   
-| lookup userAccountControl.csv userAccountControl output UAC_explanation
+| `uac_exp(userAccountControl)`
 | eval lastLogonEpoch=strptime(lastLogon,"%I:%M.%S %p, %a %m/%d/%Y"),
     pwdLastSetEpoch=strptime(pwdLastSet,"%I:%M.%S %p, %a %m/%d/%Y"),
     lastLogon=strftime(strptime(lastLogon,"%I:%M.%S %p, %a %m/%d/%Y"), "%F %T"),
@@ -15,10 +15,9 @@
     passwordInUseYears=round((timeNow-pwdLastSetEpoch)/31556926,1),
     passwordInUseYears=if(passwordInUseYears==currentYear,0,passwordInUseYears),
     machineAccount=if(substr(sAMAccountName,-1)=="$", 1, 0), 
-    UAC_explanation=split(UAC_explanation,"|"),
     domain=upper(replace(userPrincipalName,"(.*@)([^\.]+)(.*)","\2")) 
 | sort 0 - pwdLastSetDays + lastLogonDays  
-| fields machineAccount sAMAccountName domain whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation
+| fields machineAccount sAMAccountName domain whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explain
     </query>
     <earliest>-60d@h</earliest>
     <latest>now</latest>
@@ -38,11 +37,12 @@
       <fieldForLabel>UAC_explanation</fieldForLabel>
       <fieldForValue>UAC_explanation</fieldForValue>
       <search>
-        <query>| inputlookup userAccountControl.csv
-| table UAC_explanation
-| eval UAC_explanation=split(UAC_explanation,"|")
-| mvexpand UAC_explanation
-| stats c by UAC_explanation</query>
+        <query>| makeresults 
+| eval uac=999999999999
+| `uac_exp(uac)`
+| table UAC_explain
+| mvexpand UAC_explain
+| where NOT match(UAC_explain,"^Undeclared.*|^Unknown.*")</query>
         <earliest>-24h@h</earliest>
         <latest>now</latest>
       </search>
@@ -98,7 +98,7 @@
           <query>$last_logon_filter$ 
 $domain_filter$ $account_name_search$
 | where pwdLastSetDays&gt;90 AND machineAccount==0 AND NOT match(admonEventType,".*Deleted.*") AND $uac_filter$ 
-| table sAMAccountName domain whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
+| table sAMAccountName domain whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explain</query>
         </search>
         <option name="count">10</option>
         <option name="dataOverlayMode">none</option>
@@ -117,7 +117,7 @@ $domain_filter$ $account_name_search$
           <query>$last_logon_filter$ 
 $domain_filter$ $account_name_search$
 | where pwdLastSetDays&gt;30 AND machineAccount==1 AND $uac_filter$
-| table sAMAccountName domain whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explanation</query>
+| table sAMAccountName domain whenCreated lastLogon lastLogonDays pwdLastSet passwordInUseYears pwdLastSetDays userAccountControl UAC_explain</query>
         </search>
         <option name="count">10</option>
         <option name="dataOverlayMode">none</option>

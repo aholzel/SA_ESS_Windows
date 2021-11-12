@@ -3,7 +3,7 @@ This file will contain the changes to the script files. In the script files you 
 
 | Date       | Version | Author  | **[Type]** Description                                                                |
 |:-----------|:--------|:--------|:--------------------------------------------------------------------------------------|
-| 2021-08-25 | 5.3.0   | Arnold  | **[ADD]** `uac_exp` macro to replace the userAccountControl lookup. <br /> **[ADD]** (more specific) signatures for EventCodes 4627/4768/4769/5140/5145 <br /> **[DEP]** The userAccountControl lookup is depricated, please use the macro instead. <br /> **[FIX]** Incorrect tag for cleartext logon. <br /> **[MOD]** Changes to the 'AD info' dashboard to search for specific data.
+| 2021-11-11 | 5.4.0   | Arnold  | **[FIX]** Typo in props `New_Time` field <br /> **[FIX]** Changed the account lockout dashboard to use the Change DM **[MOD]** Changed the marcos.conf to make the data releated macros more precise. <br /> **[MOD]** Changed savedsearches and dashboards to use the new macros 
 
 # Latest version:
 ## General app changes
@@ -57,3 +57,4 @@ This file will contain the changes to the script files. In the script files you 
 | 2021-06-09 | 5.1.0   | Arnold  | **[ADD]** props/transforms/eventtypes/tags for the "WinEventlog:Directory Service" bind logins <br />
 | 2021-06-25 | 5.2.0   | Arnold  | **[ADD]** New values to the userAccountControl lookup (also working on a macro to do this)**[ADD]** wel-eq-kv2 stanza in transforms.conf to fix the DELIMS problems <br />**[DEL]** wel-eq-kv stanza in transforms.conf due to problems with the empty DELIMS <br />**[MOD]** Disabled the Powershell savedsearch again. <br />**[MOD]** Changes to the AD info search <br />**[MOD]** Moved this file and the README to the /readme dir
 | 2021-07-02 | 5.2.1   | Arnold  | **[FIX]** Resolved faulty windwos_signature_extended.csv lookup
+| 2021-08-25 | 5.3.0   | Arnold  | **[ADD]** `uac_exp` macro to replace the userAccountControl lookup. <br /> **[ADD]** (more specific) signatures for EventCodes 4627/4768/4769/5140/5145 <br /> **[DEP]** The userAccountControl lookup is depricated, please use the macro instead. <br /> **[FIX]** Incorrect tag for cleartext logon. <br /> **[MOD]** Changes to the 'AD info' dashboard to search for specific data.

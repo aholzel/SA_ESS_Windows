@@ -28,7 +28,7 @@
       <table>
         <title>User accounts with more than 10 lockout reports</title>
         <search>
-          <query>| tstats summariesonly=t count, min(_time) AS first, max(_time) AS last from datamodel=Change_Analysis where nodename=All_Changes.Account_Management All_Changes.result="lockout" All_Changes.Account_Management.src_nt_domain=$domain$ by All_Changes.src,All_Changes.dest,All_Changes.Account_Management.src_nt_domain,All_Changes.user
+          <query>| tstats summariesonly=t count, min(_time) AS first, max(_time) AS last from datamodel=Change where nodename=All_Changes.Account_Management All_Changes.result="lockout" All_Changes.Account_Management.src_nt_domain=$domain$ by All_Changes.src,All_Changes.dest,All_Changes.Account_Management.src_nt_domain,All_Changes.user
 | sort - count 
 | where count &gt; 10
 | `drop_dm_object_name("All_Changes")` 

@@ -1,6 +1,8 @@
 <form>
   <search id="BaseSearch">
-    <query>`winevent_security` EventCode="4720" | table src_nt_domain src_user Account_Name Account_Domain src_user_category</query>
+    <query>`winevent_security` EventCode="4720" 
+    | table _time src_nt_domain src_user dest_nt_domain user src_user_category
+    </query>
     <earliest>$timeRange.earliest$</earliest>
     <latest>$timeRange.latest$</latest>
   </search>
@@ -24,9 +26,11 @@
       <label>Domain</label>
       <choice value="*">ALL</choice>
       <search base="BaseSearch">
-        <query>| search $authorized$ | stats count by src_nt_domain | eval label=src_nt_domain."(".count.")" | table label src_nt_domain</query>
-        <earliest>$timeRange.earliest$</earliest>
-        <latest>$timeRange.latest$</latest>
+        <query>
+          | search $authorized$ 
+          | stats count by src_nt_domain 
+          | eval label=src_nt_domain."(".count.")" 
+          | table label src_nt_domain</query>
       </search>
       <fieldForLabel>label</fieldForLabel>
       <fieldForValue>src_nt_domain</fieldForValue>
@@ -39,102 +43,110 @@
       <chart>
         <title>Accounts created per domain</title>
         <search base="BaseSearch">
-          <query>| search $authorized$ $domain$ | stats count by _time Account_Domain | timechart minspan=30m count by Account_Domain</query>
+          <query>
+            | search $authorized$ $domain$ 
+            | stats count by _time dest_nt_domain 
+            | timechart minspan=30m count by dest_nt_domain</query>
         </search>
-        <option name="charting.legend.placement">bottom</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.drilldown">all</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.chart.stackMode">stacked</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart">line</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.axisY2.enabled">false</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">collapsed</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="refresh.display">progressbar</option>
       </chart>
     </panel>
     <panel>
       <chart>
         <title>Accounts created by user</title>
         <search base="BaseSearch">
-          <query>| search $authorized$ $domain$ | stats count by _time src_user | timechart minspan=30m count by src_user</query>
+          <query>
+            | search $authorized$ $domain$ 
+            | stats count by _time src_user 
+            | timechart minspan=30m count by src_user</query>
         </search>
-        <option name="charting.legend.placement">bottom</option>
-        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.layout.splitSeries">0</option>
-        <option name="charting.drilldown">all</option>
-        <option name="charting.chart.style">shiny</option>
-        <option name="charting.chart.stackMode">stacked</option>
-        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
-        <option name="charting.chart.nullValueMode">gaps</option>
-        <option name="charting.chart.bubbleSizeBy">area</option>
-        <option name="charting.chart.bubbleMinimumSize">10</option>
-        <option name="charting.chart.bubbleMaximumSize">50</option>
-        <option name="charting.chart">column</option>
-        <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.axisY2.enabled">false</option>
-        <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisX.scale">linear</option>
-        <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisTitleY.visibility">collapsed</option>
-        <option name="charting.axisTitleX.visibility">visible</option>
-        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">collapsed</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="refresh.display">progressbar</option>
       </chart>
     </panel>
   </row>
   <row>
     <panel>
       <table>
-        <title>"`ad_domain`" accounts</title>
+        <title>Default domain accounts (set in de `ad_domain` macro)</title>
         <search base="BaseSearch">
-          <query>| search $authorized$ $domain$
-            | where src_nt_domain=`ad_domain`
-| eval createdBy=mvindex(Account_Name,0)
-| eval newAccount=mvindex(Account_Name,1)
-| eval domain=mvindex(Account_Domain,1)
-| rex field=_raw "(?ms)User\sAccount\sControl\:\s+(?&lt;UserAccountControl&gt;.*?)\s+User\sParameters"
-| eval UserAccountControl=replace(UserAccountControl, "\s\'", " / '")
-| eval UserAccountControl=replace(UserAccountControl, "-", "=")
-| eval UserAttr=split(UserAccountControl, "/")
-| table _time domain createdBy newAccount UserAttr
-| sort - _time</query>
-          <earliest>$timeRange.earliest$</earliest>
-          <latest>$timeRange.latest$</latest>
+          <query>
+            | search $authorized$ $domain$
+            | where src_nt_domain="`ad_domain`"
+            | eval createdBy=src_user
+            | eval newAccount=user
+            | eval domain=dest_nt_domain
+            | rex field=_raw "(?ms)User\sAccount\sControl\:\s+(?&lt;UserAccountControl&gt;.*?)\s+User\sParameters"
+            | eval UserAccountControl=replace(UserAccountControl, "\s\'", " / '")
+            | eval UserAccountControl=replace(UserAccountControl, "-", "=")
+            | eval UserAttr=split(UserAccountControl, "/")
+            | table _time domain createdBy newAccount UserAttr
+            | sort - _time</query>
         </search>
+        <option name="refresh.display">progressbar</option>
       </table>
     </panel>
   </row>
   <row>
     <panel>
       <table>
-        <title>Non "`ad_domain`" accounts</title>
+        <title>Non default domain accounts</title>
         <search base="BaseSearch">
-          <query>| search $authorized$ $domain$
-            | where src_nt_domain!=`ad_domain`
-| eval createdBy=mvindex(Account_Name,0)
-| eval newAccount=mvindex(Account_Name,1)
-| eval domain=mvindex(Account_Domain,1)
-| rex field=_raw "(?ms)User\sAccount\sControl\:\s+(?&lt;UserAccountControl&gt;.*?)\s+User\sParameters"
-| eval UserAccountControl=replace(UserAccountControl, "\s\'", " / '")
-| eval UserAccountControl=replace(UserAccountControl, "-", "=")
-| eval UserAttr=split(UserAccountControl, "/")
-| table _time domain createdBy newAccount UserAttr
-| sort - _time</query>
-          <earliest>$timeRange.earliest$</earliest>
-          <latest>$timeRange.latest$</latest>
+          <query>
+            | search $authorized$ $domain$
+            | where src_nt_domain!="`ad_domain`"
+            | eval createdBy=src_user
+            | eval newAccount=user
+            | eval domain=dest_nt_domain
+            | rex field=_raw "(?ms)User\sAccount\sControl\:\s+(?&lt;UserAccountControl&gt;.*?)\s+User\sParameters"
+            | eval UserAccountControl=replace(UserAccountControl, "\s\'", " / '")
+            | eval UserAccountControl=replace(UserAccountControl, "-", "=")
+            | eval UserAttr=split(UserAccountControl, "/")
+            | table _time domain createdBy newAccount UserAttr
+            | sort - _time</query>
         </search>
+        <option name="refresh.display">progressbar</option>
       </table>
     </panel>
   </row>

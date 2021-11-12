@@ -1,5 +1,5 @@
 # SA-ESS-Windows
-Splunk App for Enterprise Security and Windows Security log
+Splunk App for Enterprise Security (ES) and Windows Security log
 
 ***
 **IMPORTANT**
@@ -16,7 +16,7 @@ Splunk Cloud. For apps that need to be installed in Splunk Cloud there needs to 
 # App goals
 1. Fill the Enterprise Security Datamodels, with the right info. 
 2. Remove unnecessary info from a lot of Windows events
-3. Prevent the ingestion of admin passwords in case Microsoft Local Administrator Password Solution (LAPS) is used
+3. Prevent the ingestion of plain tekst admin passwords in case Microsoft Local Administrator Password Solution (LAPS) is used
 
 # App content
 The app contains: 
@@ -47,11 +47,23 @@ After installation some macros and eventtypes might need to be changed depending
 - security_log          : The Windows Security eventlogs. default: `source=WinEventLog:Security`
 - system_log            : The Windows System eventlogs. default: `source=WinEventLog:System`
 - application_log       : The Windows Application eventlogs. default: `source=WinEventLog:Application`
+- ad_domain             : The primairy Active directory domain name.
 
 ## Eventtypes
 - winevent_security     : The Windows Security eventlogs. default: `(index=wineventlog source="WinEventLog:Security")`
 - winevent_system       : The Windows System eventlogs. default: `(index=wineventlog source="WinEventLog:System")`
 - winevent_application  : The Windows Application eventlogs. default: `(index=wineventlog source="WinEventLog:Application")`
+
+## Lookups
+Because this app was build with Splunk ES in mind it uses some of the Splunk ES lookups. If you don't have ES create the following lookups manually:
+
+### administrative_identities.csv
+Fields:
+identity,prefix,nick,first,last,suffix,email,phone,managedBy,priority,bunit,category,watchlist,startDate,endDate,work_city,work_country,work_lat,work_long,cim_entity_zone
+
+See the [Splunk documentation](https://docs.splunk.com/Documentation/ES/latest/Admin/Formatassetoridentitylist#Identity_lookup_fields) for more info on the fields and there expected content.
+
+The "Interactive serviceaccount logon" dashboard needs this lookup and also expects a `interactive_no` value in the category field for accounts that are not allowed to do a interactive logon.
 
 # Usage 
 ## Macros
