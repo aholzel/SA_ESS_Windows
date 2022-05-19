@@ -1,0 +1,2 @@
+EventCode,status_code,SourceName,signature,CategoryString,action,result,change_type,object_category
+109,,,"The computer shutdown",,stopped,"System shutdown",,audit
