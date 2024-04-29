@@ -4,13 +4,14 @@ Splunk App for Enterprise Security (ES) and Windows Security log
 ***
 **IMPORTANT**
 
-Before installing version 5.0.0 please remove the older version you are running now. The installation directroy has changed from "SA-ESS-Windows" to "SA_ESS_Windows" this had to be done to make sure the app can be installed on 
-Splunk Cloud. For apps that need to be installed in Splunk Cloud there needs to be a app id in the apps.conf [package] stanza, and the specs says:
+Before installing version 5.0.0 please remove the older version you are running now. The installation directroy has changed from "SA-ESS-Windows" to "SA_ESS_Windows" this had to be done to make sure the app can be installed on Splunk Cloud. For apps that need to be installed in Splunk Cloud there needs to be a app id in the apps.conf [package] stanza, and the specs says:
 > * id must be the same as the folder name in which your app lives in
 >   $SPLUNK_HOME/etc/apps.
 > * id must adhere to these cross-platform folder name restrictions:
 >  * must contain only letters, numbers, "." (dot), and "_" (underscore)
 >    characters.
+
+As of version 5.7.0 the app includes a inputs.conf with a blacklist for WinEventLog:Security and a whitelist for WinEventLog:Application please make sure that you either remove this if it is unwanted or send it to the correct systems.
 ***
 
 # App goals
