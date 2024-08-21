@@ -54,6 +54,8 @@ After installation some macros and eventtypes might need to be changed depending
 - winevent_security     : The Windows Security eventlogs. default: `(index=wineventlog source="WinEventLog:Security")`
 - winevent_system       : The Windows System eventlogs. default: `(index=wineventlog source="WinEventLog:System")`
 - winevent_application  : The Windows Application eventlogs. default: `(index=wineventlog source="WinEventLog:Application")`
+- winevent_dirservice   : The Windows Directory Services eventlogs. default: `(index=wineventlog source="WinEventLog:Directory Service")`
+- winevent_firewall     : The Windows Firewall eventlogs. default: `(index=wineventlog source="WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall")`
 
 ## Lookups
 Because this app was build with Splunk ES in mind it uses some of the Splunk ES lookups. If you don't have ES create the following lookups manually:

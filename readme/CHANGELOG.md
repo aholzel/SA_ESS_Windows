@@ -3,7 +3,7 @@ This file will contain the changes to the script files. In the script files you 
 
 | Date       | Version | Author  | **[Type]** Description                                                                |
 |:-----------|:--------|:--------|:--------------------------------------------------------------------------------------|
-| 2024-04-29 | 5.7.0   | Arnold  | **[ADD]** inputs.conf with blacklist for security logs and whitelist for application log <br /> **[ADD]** props/transforms for WinEventLog:Application 
+| 2024-08-21 | 5.8.0   | Arnold  | **[ADD]** props/transforms/eventtypes for WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall 
 
 # Latest version:
 ## General app changes
@@ -62,3 +62,4 @@ This file will contain the changes to the script files. In the script files you 
 | 2021-12-29 | 5.5.0   | Arnold  | **[ADD]** New events and/or better info in Windows signature lookup table
 | 2023-09-15 | 5.6.0   | Arnold  | **[ADD]** Additonal fields for Directory Service events. <br />**[ADD]** Eventtype for file access and firewall events<br /> **[DEL]** EventCode 4648 from the Winlogon eventtypes. This event is only logged on succes and also creates a 4624.<br />**[MOD]** Action info in Windows signature lookup table based on datamodel required field values. <br />
 | 2023-12-28 | 5.6.1   | Arnold  | **[MOD]** Minor changes
+| 2024-04-29 | 5.7.0   | Arnold  | **[ADD]** inputs.conf with blacklist for security logs and whitelist for application log <br /> **[ADD]** props/transforms for WinEventLog:Application 
