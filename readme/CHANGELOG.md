@@ -3,7 +3,7 @@ This file will contain the changes to the script files. In the script files you 
 
 | Date       | Version | Author  | **[Type]** Description                                                                |
 |:-----------|:--------|:--------|:--------------------------------------------------------------------------------------|
-| 2024-08-21 | 5.8.0   | Arnold  | **[ADD]** props/transforms/eventtypes for WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall 
+| 2025-01-06 | 5.8.1   | Arnold  | **[ADD]** props/transforms/eventtypes for WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall <br /> **[ADD]** Blacklist for WinEventlog:System
 
 # Latest version:
 ## General app changes
