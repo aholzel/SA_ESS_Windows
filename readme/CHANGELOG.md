@@ -1,12 +1,12 @@
 # CHANGELOG
 This file will contain the changes to the script files. In the script files you will only find th current major version change log. The file is split up in two parts, to make it easier to find the latest changes. The top part contains the latest changes per script and in general for the app. The bottom part contains all the changes.
 
+# Latest version:
 | Date       | Version | Author  | **[Type]** Description                                                                |
 |:-----------|:--------|:--------|:--------------------------------------------------------------------------------------|
-| 2025-01-06 | 5.8.1   | Arnold  | **[ADD]** props/transforms/eventtypes for WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall <br /> **[ADD]** Blacklist for WinEventlog:System
+| 2025-03-20 | 6.0.0   | Arnold  | **[BREAKING]** The action field doesn't have a "catch all" anymore based on the Audit keywords field, this is so the action field in the windows_signature_extended.csv will be used.<br />**[ADD]** Eventtypes for data access and account management, made a seperate eventtype for EventCode=4738<br />**[ADD]** New userAccountControl values and made it more clear if a Kerberos delegation is a constrained or unconstrained delegation.<br />**[ADD]** Collection for AD user identities<br />**[ADD]** Savedsearch to fill the ad_user_accounts collection with data from admon.<br /> **[MOD]** The windows_signature_extended.csv has a extra field "reason" for the authentication datamodel. In the future the signature field for authentication failure will only contain "Logon Failure" and the failure reason will be in the reason field.<br />**[MOD]** Removed the eventtype "WindowsLogin_Explicit" from the Authentication datamodel.
 
-# Latest version:
-## General app changes
+## All app changes history
 | Date       | Version | Author  | **[Type]** Description                                                                |
 |:-----------|:--------|:--------|:--------------------------------------------------------------------------------------|
 | -          | 1.0     | Arnold  | initial version
@@ -63,3 +63,4 @@ This file will contain the changes to the script files. In the script files you 
 | 2023-09-15 | 5.6.0   | Arnold  | **[ADD]** Additonal fields for Directory Service events. <br />**[ADD]** Eventtype for file access and firewall events<br /> **[DEL]** EventCode 4648 from the Winlogon eventtypes. This event is only logged on succes and also creates a 4624.<br />**[MOD]** Action info in Windows signature lookup table based on datamodel required field values. <br />
 | 2023-12-28 | 5.6.1   | Arnold  | **[MOD]** Minor changes
 | 2024-04-29 | 5.7.0   | Arnold  | **[ADD]** inputs.conf with blacklist for security logs and whitelist for application log <br /> **[ADD]** props/transforms for WinEventLog:Application 
+| 2025-01-06 | 5.8.1   | Arnold  | **[ADD]** props/transforms/eventtypes for WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall <br /> **[ADD]** Blacklist for WinEventlog:System
