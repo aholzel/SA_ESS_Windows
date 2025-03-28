@@ -1,4 +1,4 @@
-<form>
+<form version="1.0">
   <search id="BaseSearch">
     <query>`winevent_security` EventCode=5136 [ | inputlookup monitored_groups.csv | rename GUID AS DN]
 | eval result = mvindex(Type,2)

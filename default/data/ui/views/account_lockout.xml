@@ -1,4 +1,4 @@
-<form>
+<form version="1.0">
   <label>Account Lockout</label>
   <fieldset submitButton="false" autoRun="true">
     <input type="time" token="TimeRange">

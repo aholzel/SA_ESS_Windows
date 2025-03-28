@@ -1,4 +1,4 @@
-<form>
+<form version="1.0">
   <search id="baseSearchPasswords">
     <query>`admon_index`   
 | stats latest(whenCreated) AS whenCreated, latest(lastLogon) AS lastLogon, latest(pwdLastSet) AS pwdLastSet, latest(userAccountControl) AS userAccountControl, values(admonEventType) AS admonEventType, values(sAMAccountName) AS sAMAccountName by userPrincipalName   
@@ -31,11 +31,11 @@
       <prefix>(</prefix>
       <suffix>)</suffix>
       <initialValue>.*</initialValue>
-      <valuePrefix>match(UAC_explanation,"</valuePrefix>
+      <valuePrefix>match(UAC_explain,"</valuePrefix>
       <valueSuffix>")</valueSuffix>
       <delimiter> OR </delimiter>
-      <fieldForLabel>UAC_explanation</fieldForLabel>
-      <fieldForValue>UAC_explanation</fieldForValue>
+      <fieldForLabel>UAC_explain</fieldForLabel>
+      <fieldForValue>UAC_explain</fieldForValue>
       <search>
         <query>| makeresults 
 | eval uac=999999999999

@@ -1,4 +1,4 @@
-<form>
+<form version="1.0">
   <label>PowerShell</label>
   <description>Scripts from the "legit_powershell_scripts.csv" lookup are excluded. To view the content of the lookup check the "view lookup content" checkbox, hit submit and scroll down.</description>
   <!--
