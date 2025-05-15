@@ -149,11 +149,11 @@ EventCode,"status_code",signature,reason,CategoryString,action,result,"change_ty
 4725,"-","A user account was disabled","","User Account Management",modified,,Authorization,user
 4726,"-","A user account was deleted","","User Account Management",deleted,,Authentication,user
 4727,"-","A security-enabled global group was created","","Security Group Management",created,"A security-enabled global group was created",Authorization,"group:sec"
-4728,"-","A member was added to a security-enabled global group","","Security Group Management",updated,"A member was added to a security-enabled global group",Authorization,"group:sec"
+4728,"-","A member was added to a security-enabled global group","","Security Group Management",modified,"A member was added to a security-enabled global group",Authorization,"group:sec"
 4729,"-","A member was removed from a security-enabled global group","","Security Group Management",modified,"A member was removed from a security-enabled global group",Authorization,"group:sec"
 4730,"-","A security-enabled global group was deleted","","Security Group Management",deleted,"A security-enabled global group was deleted",Authorization,"group:sec"
 4731,"-","A security-enabled local group was created","","Security Group Management",created,"A security-enabled local group was created",Authorization,"group:sec"
-4732,"-","A member was added to a security-enabled local group","","Security Group Management",updated,"A member was added to a security-enabled local group",Authorization,"group:sec"
+4732,"-","A member was added to a security-enabled local group","","Security Group Management",modified,"A member was added to a security-enabled local group",Authorization,"group:sec"
 4733,"-","A member was removed from a security-enabled local group","","Security Group Management",modified,"A member was removed from a security-enabled local group",Authorization,"group:sec"
 4734,"-","A security-enabled local group was deleted","","Security Group Management",deleted,"A security-enabled local group was deleted",Authorization,"group:sec"
 4735,"-","A security-enabled local group was changed","","Security Group Management",modified,"A security-enabled local group was changed",Authorization,"group:sec"
