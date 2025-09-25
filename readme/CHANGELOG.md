@@ -4,7 +4,7 @@ This file will contain the changes to the script files. In the script files you 
 # Latest version:
 | Date       | Version | Author  | **[Type]** Description                                                                |
 |:-----------|:--------|:--------|:--------------------------------------------------------------------------------------|
-| 2025-07-14 | 6.3.1   | Arnold  | **[FIX]** For the process_name field extracts
+| 2025-09-25 | 6.3.2   | Arnold  | **[ADD]** More status codes for EventCodes 4769/5168 thanks @axelhuson <br />**[FIX]** Changes to the `wel-col-kv` regex also thanks @axelhuson for the suggestions <br />**[ADD]** Signature calculated field for `WinEventLog:System`
 
 ## All app changes history
 | Date       | Version | Author  | **[Type]** Description                                                                |
@@ -67,4 +67,5 @@ This file will contain the changes to the script files. In the script files you 
 | 2025-03-20 | 6.0.0   | Arnold  | **[BREAKING]** The action field doesn't have a "catch all" anymore based on the Audit keywords field, this is so the action field in the windows_signature_extended.csv will be used.<br />**[ADD]** Eventtypes for data access and account management, made a seperate eventtype for EventCode=4738<br />**[ADD]** New userAccountControl values and made it more clear if a Kerberos delegation is a constrained or unconstrained delegation.<br />**[ADD]** Collection for AD user identities<br />**[ADD]** Savedsearch to fill the ad_user_accounts collection with data from admon.<br /> **[MOD]** The windows_signature_extended.csv has a extra field "reason" for the authentication datamodel. In the future the signature field for authentication failure will only contain "Logon Failure" and the failure reason will be in the reason field.<br />**[MOD]** Removed the eventtype "WindowsLogin_Explicit" from the Authentication datamodel.
 | 2025-03-28 | 6.1.0   | Arnold  | **[ADD]** data access related events to the Data Access datamodel<br />**[FIX]** inputs.conf fixes<br />**[FIX]** version missing in dashboards
 | 2025-05-15 | 6.2.0   | Arnold  | **[ADD]** Better eventtypes for account management <br />**[ADD]** Field extracts
-| 2025-07-11 | 6.3.0   | Arnold  | **[ADD]** Field extracts <br />**[ADD]** process_name field extract to fix CIM extract bug <br />**[DEL]** 3 CIM_logon_logff field extracts that didn't work anymore on new eventlogs <br />**[FIX]** src field extract to give better results.
+| 2025-07-11 | 6.3.0   | Arnold  | **[ADD]** Field extracts <br />**[ADD]** process_name field extract to fix CIM extract bug <br />**[DEL]** 3 CIM_logon_logof field extracts that didn't work anymore on new eventlogs <br />**[FIX]** src field extract to give better results.
+| 2025-07-14 | 6.3.1   | Arnold  | **[FIX]** For the process_name field extracts
