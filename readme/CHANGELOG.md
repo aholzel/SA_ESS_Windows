@@ -4,7 +4,7 @@ This file will contain the changes to the script files. In the script files you 
 # Latest version:
 | Date       | Version | Author  | **[Type]** Description                                                                |
 |:-----------|:--------|:--------|:--------------------------------------------------------------------------------------|
-| 2025-09-25 | 6.3.2   | Arnold  | **[ADD]** More status codes for EventCodes 4769/5168 thanks @axelhuson <br />**[FIX]** Changes to the `wel-col-kv` regex also thanks @axelhuson for the suggestions <br />**[ADD]** Signature calculated field for `WinEventLog:System`
+| 2026-04-15 | 6.3.3   | Arnold  | **[ADD]** More translations for fields, needed for the new Windows update <br />**[FIX]** Typos in the eventtypes.conf
 
 ## All app changes history
 | Date       | Version | Author  | **[Type]** Description                                                                |
@@ -69,3 +69,4 @@ This file will contain the changes to the script files. In the script files you 
 | 2025-05-15 | 6.2.0   | Arnold  | **[ADD]** Better eventtypes for account management <br />**[ADD]** Field extracts
 | 2025-07-11 | 6.3.0   | Arnold  | **[ADD]** Field extracts <br />**[ADD]** process_name field extract to fix CIM extract bug <br />**[DEL]** 3 CIM_logon_logof field extracts that didn't work anymore on new eventlogs <br />**[FIX]** src field extract to give better results.
 | 2025-07-14 | 6.3.1   | Arnold  | **[FIX]** For the process_name field extracts
+| 2025-09-25 | 6.3.2   | Arnold  | **[ADD]** More status codes for EventCodes 4769/5168 thanks @axelhuson <br />**[FIX]** Changes to the `wel-col-kv` regex also thanks @axelhuson for the suggestions <br />**[ADD]** Signature calculated field for `WinEventLog:System`
